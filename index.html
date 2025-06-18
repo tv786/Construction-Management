@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruh Al-Bina Construction Management</title>
+    
+    <!-- Favicon and PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#F59E0B">
+    
+    <!-- External CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Local CSS -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="assets/logo.svg" alt="Ruh Al-Bina" class="logo">
+                    <div class="company-info">
+                        <h1>Ruh Al-Bina</h1>
+                        <span>Construction Management</span>
+                    </div>
+                </div>
+                
+                <nav class="main-nav">
+                    <button class="nav-btn active" data-section="dashboard">
+                        <i class="fas fa-chart-line"></i>
+                        Dashboard
+                    </button>
+                    <button class="nav-btn" data-section="vendors">
+                        <i class="fas fa-building"></i>
+                        Vendors
+                    </button>
+                    <button class="nav-btn" data-section="transactions">
+                        <i class="fas fa-receipt"></i>
+                        Transactions
+                    </button>
+                    <button class="nav-btn" data-section="projects">
+                        <i class="fas fa-hammer"></i>
+                        Projects
+                    </button>
+
+                    <button class="nav-btn" data-section="calculators">
+                        <i class="fas fa-calculator"></i>
+                        Calculators
+                    </button>
+                </nav>
+                
+                <div class="header-actions">
+                    <button class="btn-icon" id="export-data" title="Export Data">
+                        <i class="fas fa-download"></i>
+                    </button>
+
+                    <div class="offline-indicator" id="offline-indicator">
+                        <i class="fas fa-wifi"></i>
+                        <span>Online</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section active">
+                <div class="section-header">
+                    <h2>Dashboard</h2>
+                    <div class="date-filter">
+                        <select id="dashboard-period">
+                            <option value="week">This Week</option>
+                            <option value="month" selected>This Month</option>
+                            <option value="quarter">This Quarter</option>
+                            <option value="year">This Year</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="total-vendors">0</h3>
+                                <p>Total Vendors</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-hammer"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="active-projects">0</h3>
+                                <p>Active Projects</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-arrow-up text-success"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="total-income">$0</h3>
+                                <p>Total Income</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-arrow-down text-danger"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="total-expenses">$0</h3>
+                                <p>Total Expenses</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <h3>Revenue vs Expenses</h3>
+                            <canvas id="revenue-chart"></canvas>
+                        </div>
+                        
+                        <div class="chart-card">
+                            <h3>Project Status</h3>
+                            <canvas id="project-status-chart"></canvas>
+                        </div>
+                        
+                        <div class="chart-card">
+                            <h3>Vendor Spending</h3>
+                            <canvas id="vendor-spending-chart"></canvas>
+                        </div>
+                        
+                        <div class="chart-card">
+                            <h3>Monthly Transactions</h3>
+                            <canvas id="monthly-transactions-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="recent-activities">
+                        <h3>Recent Activities</h3>
+                        <div id="recent-activities-list" class="activity-list">
+                            <!-- Recent activities will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vendors Section -->
+            <section id="vendors-section" class="content-section">
+                <div class="section-header">
+                    <h2>Vendor Management</h2>
+                    <button class="btn btn-primary" id="add-vendor-btn">
+                        <i class="fas fa-plus"></i>
+                        Add Vendor
+                    </button>
+                </div>
+
+                <div class="filters-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="vendor-search" placeholder="Search vendors...">
+                    </div>
+                    
+                    <select id="vendor-category-filter">
+                        <option value="">All Categories</option>
+                        <option value="materials">Materials Supplier</option>
+                        <option value="cement">Cement Supplier</option>
+                        <option value="steel">Steel Supplier</option>
+                        <option value="sand">Sand & Aggregate</option>
+                        <option value="bricks">Bricks & Blocks</option>
+                        <option value="tiles">Tiles & Flooring</option>
+                        <option value="plumber">Plumber</option>
+                        <option value="electrician">Electrician</option>
+                        <option value="carpenter">Carpenter</option>
+                        <option value="painter">Painter</option>
+                        <option value="marble">Marble Supplier</option>
+                        <option value="glass">Glass Supplier</option>
+                        <option value="hardware">Hardware Store</option>
+                        <option value="equipment">Equipment Rental</option>
+                        <option value="transport">Transport Services</option>
+                        <option value="labor">Labor Contractor</option>
+                        <option value="architect">Architect</option>
+                        <option value="engineer">Engineer</option>
+                        <option value="subcontractor">Subcontractor</option>
+                        <option value="other">Other</option>
+                    </select>
+                    
+                    <select id="vendor-status-filter">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table" id="vendors-table">
+                        <thead>
+                            <tr>
+                                <th data-sort="name">Name <i class="fas fa-sort"></i></th>
+                                <th data-sort="category">Category <i class="fas fa-sort"></i></th>
+                                <th data-sort="contact">Contact <i class="fas fa-sort"></i></th>
+                                <th data-sort="totalSpent">Total Spent <i class="fas fa-sort"></i></th>
+                                <th data-sort="status">Status <i class="fas fa-sort"></i></th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vendors-table-body">
+                            <!-- Vendor data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Transactions Section -->
+            <section id="transactions-section" class="content-section">
+                <div class="section-header">
+                    <h2>Transaction Management</h2>
+                    <button class="btn btn-primary" id="add-transaction-btn">
+                        <i class="fas fa-plus"></i>
+                        Add Transaction
+                    </button>
+                </div>
+
+                <div class="filters-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="transaction-search" placeholder="Search transactions...">
+                    </div>
+                    
+                    <select id="transaction-type-filter">
+                        <option value="">All Types</option>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                    
+                    <select id="transaction-vendor-filter">
+                        <option value="">All Vendors</option>
+                        <!-- Vendors will be populated here -->
+                    </select>
+                    
+                    <select id="transaction-project-filter">
+                        <option value="">All Projects</option>
+                        <!-- Projects will be populated here -->
+                    </select>
+                    
+                    <select id="transaction-category-filter">
+                        <option value="">All Categories</option>
+                        <option value="materials">Materials</option>
+                        <option value="labor">Labor</option>
+                        <option value="equipment">Equipment</option>
+                        <option value="transport">Transport</option>
+                        <option value="utilities">Utilities</option>
+                        <option value="permits">Permits & Licenses</option>
+                        <option value="consultation">Consultation</option>
+                        <option value="rental">Rental</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="payment">Client Payment</option>
+                        <option value="advance">Advance Payment</option>
+                        <option value="other">Other</option>
+                    </select>
+                    
+                    <select id="transaction-payment-filter">
+                        <option value="">All Payment Methods</option>
+                        <option value="cash">Cash</option>
+                        <option value="check">Check</option>
+                        <option value="upi">UPI</option>
+                        <option value="bank-transfer">Bank Transfer</option>
+                        <option value="card">Card</option>
+                    </select>
+                    
+                    <input type="date" id="transaction-date-from" placeholder="From Date">
+                    <input type="date" id="transaction-date-to" placeholder="To Date">
+                </div>
+
+                <div class="transaction-summary" id="transaction-summary">
+                    <div class="summary-card">
+                        <span class="summary-label">Total Income:</span>
+                        <span class="summary-value income" id="total-income">₹0.00</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Total Expense:</span>
+                        <span class="summary-value expense" id="total-expense">₹0.00</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Net Amount:</span>
+                        <span class="summary-value" id="net-amount">₹0.00</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Filtered Total:</span>
+                        <span class="summary-value highlight" id="filtered-total">₹0.00</span>
+                    </div>
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table" id="transactions-table">
+                        <thead>
+                            <tr>
+                                <th data-sort="date">Date <i class="fas fa-sort"></i></th>
+                                <th data-sort="type">Type <i class="fas fa-sort"></i></th>
+                                <th data-sort="category">Category <i class="fas fa-sort"></i></th>
+                                <th data-sort="vendor">Vendor <i class="fas fa-sort"></i></th>
+                                <th data-sort="project">Project <i class="fas fa-sort"></i></th>
+                                <th data-sort="amount">Amount <i class="fas fa-sort"></i></th>
+                                <th data-sort="paymentMethod">Payment <i class="fas fa-sort"></i></th>
+                                <th data-sort="description">Description <i class="fas fa-sort"></i></th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-table-body">
+                            <!-- Transaction data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projects-section" class="content-section">
+                <div class="section-header">
+                    <h2>Project Management</h2>
+                    <button class="btn btn-primary" id="add-project-btn">
+                        <i class="fas fa-plus"></i>
+                        Add Project
+                    </button>
+                </div>
+
+                <div class="filters-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="project-search" placeholder="Search projects...">
+                    </div>
+                    
+                    <select id="project-status-filter">
+                        <option value="">All Status</option>
+                        <option value="planning">Planning</option>
+                        <option value="active">Active</option>
+                        <option value="completed">Completed</option>
+                        <option value="on-hold">On Hold</option>
+                    </select>
+                </div>
+
+                <div class="projects-grid" id="projects-grid">
+                    <!-- Project cards will be populated here -->
+                </div>
+            </section>
+
+
+
+            <!-- Calculators Section -->
+            <section id="calculators-section" class="content-section">
+                <div class="section-header">
+                    <h2>Construction Calculators</h2>
+                </div>
+
+                <div class="calculators-grid">
+                    <div class="calculator-card">
+                        <h3><i class="fas fa-cube"></i> Material Calculator</h3>
+                        <div class="calculator-content">
+                            <div class="calc-input-group">
+                                <label>Material Type:</label>
+                                <select id="material-type">
+                                    <option value="concrete">Concrete</option>
+                                    <option value="brick">Bricks</option>
+                                    <option value="tiles">Tiles</option>
+                                    <option value="paint">Paint</option>
+                                </select>
+                            </div>
+                            
+                            <div class="calc-input-group">
+                                <label>Length (m):</label>
+                                <input type="number" id="material-length" step="0.1">
+                            </div>
+                            
+                            <div class="calc-input-group">
+                                <label>Width (m):</label>
+                                <input type="number" id="material-width" step="0.1">
+                            </div>
+                            
+                            <div class="calc-input-group">
+                                <label>Height/Thickness (m):</label>
+                                <input type="number" id="material-height" step="0.01">
+                            </div>
+                            
+                            <button class="btn btn-primary" onclick="calculateMaterial()">Calculate</button>
+                            
+                            <div class="calc-result" id="material-result"></div>
+                        </div>
+                    </div>
+
+                    <div class="calculator-card">
+                        <h3><i class="fas fa-dollar-sign"></i> Cost Estimator</h3>
+                        <div class="calculator-content">
+                            <div class="calc-input-group">
+                                <label>Project Type:</label>
+                                <select id="project-type">
+                                    <option value="residential">Residential</option>
+                                    <option value="commercial">Commercial</option>
+                                    <option value="renovation">Renovation</option>
+                                </select>
+                            </div>
+                            
+                            <div class="calc-input-group">
+                                <label>Total Area (sq m):</label>
+                                <input type="number" id="project-area" step="0.1">
+                            </div>
+                            
+                            <div class="calc-input-group">
+                                <label>Quality Level:</label>
+                                <select id="quality-level">
+                                    <option value="basic">Basic</option>
+                                    <option value="standard">Standard</option>
+                                    <option value="premium">Premium</option>
+                                </select>
+                            </div>
+                            
+                            <button class="btn btn-primary" onclick="calculateCost()">Calculate</button>
+                            
+                            <div class="calc-result" id="cost-result"></div>
+                        </div>
+                    </div>
+
+                    <div class="calculator-card">
+                        <h3><i class="fas fa-clock"></i> Labor Calculator</h3>
+                        <div class="calculator-content">
+                            <div class="calc-input-group">
+                                <label>Work Type:</label>
+                                <select id="work-type">
+                                    <option value="masonry">Masonry</option>
+                                    <option value="carpentry">Carpentry</option>
+                                    <option value="plumbing">Plumbing</option>
+                                    <option value="electrical">Electrical</option>
+                                    <option value="painting">Painting</option>
+                                </select>
+                            </div>
+                            
+                            <div class="calc-input-group">
+                                <label>Work Area/Units:</label>
+                                <input type="number" id="work-units" step="0.1">
+                            </div>
+                            
+                            <div class="calc-input-group">
+                                <label>Number of Workers:</label>
+                                <input type="number" id="worker-count" min="1">
+                            </div>
+                            
+                            <div class="calc-input-group">
+                                <label>Hourly Rate (₹):</label>
+                                <input type="number" id="hourly-rate" step="0.01">
+                            </div>
+                            
+                            <button class="btn btn-primary" onclick="calculateLabor()">Calculate</button>
+                            
+                            <div class="calc-result" id="labor-result"></div>
+                        </div>
+                    </div>
+
+                    <div class="calculator-card">
+                        <h3><i class="fas fa-percentage"></i> Profit Margin</h3>
+                        <div class="calculator-content">
+                            <div class="calc-input-group">
+                                <label>Total Cost (₹):</label>
+                                <input type="number" id="total-cost" step="0.01">
+                            </div>
+                            
+                            <div class="calc-input-group">
+                                <label>Desired Profit (%):</label>
+                                <input type="number" id="profit-margin" step="0.1" value="20">
+                            </div>
+                            
+                            <div class="calc-input-group">
+                                <label>Additional Expenses (₹):</label>
+                                <input type="number" id="additional-expenses" step="0.01" value="0">
+                            </div>
+                            
+                            <button class="btn btn-primary" onclick="calculateProfit()">Calculate</button>
+                            
+                            <div class="calc-result" id="profit-result"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Modals -->
+        <div id="modal-overlay" class="modal-overlay">
+            <div class="modal" id="vendor-modal">
+                <div class="modal-header">
+                    <h3 id="vendor-modal-title">Add Vendor</h3>
+                    <button class="btn-close" onclick="closeModal()">&times;</button>
+                </div>
+                <form id="vendor-form" class="modal-body">
+                    <div class="form-group">
+                        <label for="vendor-name">Name *</label>
+                        <input type="text" id="vendor-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vendor-category">Category *</label>
+                        <select id="vendor-category" required>
+                            <option value="">Select Category</option>
+                            <option value="materials">Materials Supplier</option>
+                            <option value="cement">Cement Supplier</option>
+                            <option value="steel">Steel Supplier</option>
+                            <option value="sand">Sand & Aggregate</option>
+                            <option value="bricks">Bricks & Blocks</option>
+                            <option value="tiles">Tiles & Flooring</option>
+                            <option value="plumber">Plumber</option>
+                            <option value="electrician">Electrician</option>
+                            <option value="carpenter">Carpenter</option>
+                            <option value="painter">Painter</option>
+                            <option value="marble">Marble Supplier</option>
+                            <option value="glass">Glass Supplier</option>
+                            <option value="hardware">Hardware Store</option>
+                            <option value="equipment">Equipment Rental</option>
+                            <option value="transport">Transport Services</option>
+                            <option value="labor">Labor Contractor</option>
+                            <option value="architect">Architect</option>
+                            <option value="engineer">Engineer</option>
+                            <option value="subcontractor">Subcontractor</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vendor-contact">Contact Person</label>
+                            <input type="text" id="vendor-contact">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="vendor-phone">Phone</label>
+                            <input type="tel" id="vendor-phone">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vendor-email">Email</label>
+                        <input type="email" id="vendor-email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vendor-address">Address</label>
+                        <textarea id="vendor-address" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vendor-notes">Notes</label>
+                        <textarea id="vendor-notes" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Vendor</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div id="toast-container" class="toast-container"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
