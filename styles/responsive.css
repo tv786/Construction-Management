@@ -57,8 +57,9 @@
     }
     
     .main-nav {
+        margin-top: 50px;
         justify-content: space-between;
-        gap: 10px;
+        gap: 2px;
         padding: 10px;
         position: fixed;
         left: 0;
@@ -83,7 +84,7 @@
     }
 
     .main-content {
-        padding: var(--spacing-md);
+        padding: var(--spacing-md) var(--spacing-md) 50px var(--spacing-md);
     }
     
     .section-header {
