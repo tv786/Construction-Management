@@ -19,7 +19,7 @@ const STATIC_FILES = [
     '/js/analytics.js',
     '/js/calculators.js',
     '/js/utils.js',
-    '/assets/rab-logo.png',
+    '/assets/logo-icon.png',
     '/manifest.json',
     // External dependencies
     'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
@@ -202,8 +202,8 @@ self.addEventListener('push', event => {
     
     const options = {
         body: event.data ? event.data.text() : 'New notification from Ruh Al-Bina',
-        icon: '/assets/rab-logo.png',
-        badge: '/assets/rab-logo.png',
+        icon: '/assets/logo-icon.png',
+        badge: '/assets/logo-icon.png',
         vibrate: [200, 100, 200],
         data: {
             url: '/'
