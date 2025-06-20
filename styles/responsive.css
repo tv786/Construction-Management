@@ -84,7 +84,7 @@
     }
 
     .main-content {
-        padding: var(--spacing-md) var(--spacing-md) 50px var(--spacing-md);
+        padding: 1rem 1rem 5rem 1rem;
     }
     
     .section-header {
