@@ -15,7 +15,7 @@
     "icons": [
         {
             "src": "assets/rab-01.svg",
-            "sizes": "any",
+            "sizes": "180x180",
             "type": "image/svg+xml",
             "purpose": "any maskable"
         },
