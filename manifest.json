@@ -14,7 +14,7 @@
     "categories": ["business", "productivity", "finance"],
     "icons": [
         {
-            "src": "assets/logo-icon.png",
+            "src": "assets/rab-01.svg",
             "sizes": "any",
             "type": "image/svg+xml",
             "purpose": "any maskable"
