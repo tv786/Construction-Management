@@ -186,6 +186,7 @@
 @media (max-width: 480px) {
     .logo {
         height: 36px;
+        object-fit: contain;
     }
     
     .company-info h1 {

@@ -118,6 +118,7 @@ body {
 .logo {
     height: 48px;
     width: auto;
+    object-fit: contain;
 }
 
 .company-info h1 {
