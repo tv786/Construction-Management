@@ -58,12 +58,14 @@
     
     .main-nav {
         justify-content: space-between;
-        gap: 20px;
-        padding: 0 var(--spacing-md);
+        gap: 10px;
+        padding: 10px;
         position: fixed;
         left: 0;
         bottom: 0;
-        background-color: var(--gray-600);
+        background-color: var(--white);
+        border-top: 1px solid var(--primary-dark);
+        width: -webkit-fill-available;
     }
     
     .nav-btn {
